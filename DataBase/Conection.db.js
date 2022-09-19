@@ -9,4 +9,10 @@ const connection = mysql.createConnection(
     }
 );
 
+setInterval(() => {
+    connection.query('SELECT * FROM userdata', (err, results) => {
+        console.log('data');
+    });
+}, 40000)
+
 module.exports = { connection }

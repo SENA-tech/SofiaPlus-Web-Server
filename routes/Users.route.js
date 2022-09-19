@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql2');
+const mysql = require('mysql');
 const router = express.Router();
 
 //DataBase
@@ -16,6 +16,7 @@ router.post('/log', async (req, res) => {
                 MESSAGE: "Campos Incompletos"
             });
         } else {
+            console.log(parseInt(Type), parseInt(Identification), Password);
             let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [Identification])
             connection.query(consulta, (err, results) => {
                 console.log(results[0]);
@@ -23,12 +24,16 @@ router.post('/log', async (req, res) => {
                 if (documento === parseInt(Type) && identificacion === parseInt(Identification) && password === Password) {
                     res.json(
                         {
+                            CODE: 200,
+                            _name: nombres,
+                            _key: identificacion,
                             MESSAGE: "Logueo Exitoso"
                         }
                     )
                 } else {
                     res.json(
                         {
+                            CODE: 400,
                             MESSAGE: "Logueo Erroneo, intentelo nuevamente"
                         }
                     )
@@ -51,12 +56,12 @@ router.post('/create', async (req, res) => {
         } else {
             let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [Identification])
             connection.query(consulta, (err, results) => {
-                console.log(results);
                 if (results.length === 0) {
                     let consulta = mysql.format(`INSERT INTO userdata (nombres, apellidos, documento, identificacion, password, permisos, estado) VALUES (?, ?, ?, ?, ?, ?, ?)`, [FirstName, SecondName, Type, Identification, Password, 3, 1])
                     connection.query(consulta, (err, results) => {
                         err ? console.log(err) : res.json(
                             {
+                                CODE: 200,
                                 MESSAGE: "Usuario Generado Exitosamente"
                             }
                         );
@@ -66,6 +71,7 @@ router.post('/create', async (req, res) => {
                     if (identificacion === parseInt(Identification) && documento === parseInt(Type)) {
                         res.json(
                             {
+                                CODE: 300,
                                 MESSAGE: "Usuario Existente"
                             }
                         )
@@ -74,6 +80,7 @@ router.post('/create', async (req, res) => {
                         connection.query(consulta, (err, results) => {
                             err ? console.log(err) : res.json(
                                 {
+                                    CODE: 200,
                                     MESSAGE: "Usuario Generado Exitosamente"
                                 }
                             );
