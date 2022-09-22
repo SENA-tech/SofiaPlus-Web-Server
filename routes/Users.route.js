@@ -25,6 +25,7 @@ router.post('/log', async (req, res) => {
                 if (documento === parseInt(Type) && identificacion === parseInt(Identification) && password === Password) {
                     res.json(
                         {
+                            CODE: 200,
                             _name: nombres,
                             _key: identificacion,
                             _permissions: permisos
