@@ -37,7 +37,7 @@ router.post('/create', async (req, res) => {
     try {
         const { _permission, _code, name, teacher, type, image, description, requirements, skills, start, end, duration } = req.body;
         console.log(name, teacher, type, image, description, requirements, skills, start, end, duration);
-        if (name === '' || teacher === '' || type === '' || image === '' || description === '' || requirements === '' || skills === '' || start === '' || end == '' || duration === '') {
+        if (name === '' || teacher === '' || type === '' || description === '' || requirements === '' || skills === '' || start === '' || end == '' || duration === '') {
             res.send({
                 CODE: 400,
                 MESSAGE: "Campos Incompletos"
