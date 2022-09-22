@@ -9,7 +9,7 @@ router.post('/search', (req, res) => {
     try {
         const { Query } = req.body;
         console.log(Query);
-        if ( Query === '') {
+        if (Query === '') {
             console.log('Busqueda vacia');
         } else {
             let consulta = mysql.format(`SELECT * FROM courses WHERE nombre LIKE ?`, [`%${Query}%`])
@@ -33,51 +33,40 @@ router.get('/getter', (req, res) => {
     })
 })
 
-/* router.post('/create', async (req, res) => {
+router.post('/create', async (req, res) => {
     try {
-        const { FirstName, SecondName, Identification, Type, Password } = req.body;
-        if (FirstName === '' || SecondName === '' || Identification === '' || Type === '' || Password === '') {
+        const { _permission, _code, name, teacher, type, image, description, requirements, skills, start, end, duration } = req.body;
+        console.log(name, teacher, type, image, description, requirements, skills, start, end, duration);
+        if (name === '' || teacher === '' || type === '' || image === '' || description === '' || requirements === '' || skills === '' || start === '' || end == '' || duration === '') {
             res.send({
-                ERROR_CODE: 400,
+                CODE: 400,
                 MESSAGE: "Campos Incompletos"
             });
+            res.status(400)
         } else {
-            let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [Identification])
+            let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [_code])
             connection.query(consulta, (err, results) => {
-                console.log(results);
-                if (results.length === 0) {
-                    let consulta = mysql.format(`INSERT INTO userdata (nombres, apellidos, documento, identificacion, password, permisos, estado) VALUES (?, ?, ?, ?, ?, ?, ?)`, [FirstName, SecondName, Type, Identification, Password, 3, 1])
+                if (results[0].identificacion === _code && results[0].permisos === _permission) {
+                    let consulta = mysql.format(`INSERT INTO courses ( nombre, instructor, tipo, image, descripcion, requisitos, habilidades, inicio, fin, duracion, estado) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`, [name, teacher, type, image, description, requirements, skills, start, end, duration])
                     connection.query(consulta, (err, results) => {
-                        err ? console.log(err) : res.json(
-                            {
-                                MESSAGE: "Usuario Generado Exitosamente"
-                            }
-                        );
-                    });
-                } else {
-                    const { documento, identificacion } = results[0];
-                    if (identificacion === parseInt(Identification) && documento === parseInt(Type)) {
-                        res.json(
-                            {
-                                MESSAGE: "Usuario Existente"
-                            }
-                        )
-                    } else {
-                        let consulta = mysql.format(`INSERT INTO userdata (nombres, apellidos, documento, identificacion, password, permisos, estado) VALUES (?, ?, ?, ?, ?, ?, ?)`, [FirstName, SecondName, Type, Identification, Password, 3, 1])
-                        connection.query(consulta, (err, results) => {
-                            err ? console.log(err) : res.json(
-                                {
-                                    MESSAGE: "Usuario Generado Exitosamente"
-                                }
-                            );
+                        err ? console.log(err) : res.json({
+                            CODE: 200,
+                            MESSAGE: "Curso Creado Exitosamente"
                         });
-                    }
+                    })
+                } else {
+                    res.json({
+                        CODE: 400,
+                        MESSAGE: "Solicitud no aprobada"
+                    });
                 }
             })
+
+
         }
     } catch (e) {
         console.log(e);
     }
-}); */
+});
 
 module.exports = router

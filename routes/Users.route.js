@@ -12,24 +12,25 @@ router.post('/log', async (req, res) => {
         const { Type, Identification, Password } = req.body;
         if (Type === '' || Identification === '' || Password === '') {
             res.send({
-                ERROR_CODE: 400,
+                CODE: 400,
                 MESSAGE: "Campos Incompletos"
             });
+            res.status(400)
         } else {
             console.log(parseInt(Type), parseInt(Identification), Password);
             let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [Identification])
             connection.query(consulta, (err, results) => {
                 console.log(results[0]);
-                const { id, nombres, documento, identificacion, password } = results[0];
+                const { id, nombres, documento, identificacion, password, permisos } = results[0];
                 if (documento === parseInt(Type) && identificacion === parseInt(Identification) && password === Password) {
                     res.json(
                         {
-                            CODE: 200,
                             _name: nombres,
                             _key: identificacion,
-                            MESSAGE: "Logueo Exitoso"
+                            _permissions: permisos
                         }
                     )
+                    res.status(200)
                 } else {
                     res.json(
                         {
@@ -37,6 +38,7 @@ router.post('/log', async (req, res) => {
                             MESSAGE: "Logueo Erroneo, intentelo nuevamente"
                         }
                     )
+                    res.status(400)
                 }
             })
         }
@@ -50,9 +52,10 @@ router.post('/create', async (req, res) => {
         const { FirstName, SecondName, Identification, Type, Password } = req.body;
         if (FirstName === '' || SecondName === '' || Identification === '' || Type === '' || Password === '') {
             res.send({
-                ERROR_CODE: 400,
+                CODE: 400,
                 MESSAGE: "Campos Incompletos"
             });
+            res.status(400)
         } else {
             let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [Identification])
             connection.query(consulta, (err, results) => {
@@ -61,20 +64,22 @@ router.post('/create', async (req, res) => {
                     connection.query(consulta, (err, results) => {
                         err ? console.log(err) : res.json(
                             {
-                                CODE: 200,
+                                CODE: 201,
                                 MESSAGE: "Usuario Generado Exitosamente"
                             }
                         );
+                        res.status(201)
                     });
                 } else {
                     const { documento, identificacion } = results[0];
                     if (identificacion === parseInt(Identification) && documento === parseInt(Type)) {
                         res.json(
                             {
-                                CODE: 300,
+                                CODE: 304,
                                 MESSAGE: "Usuario Existente"
                             }
                         )
+                        res.status(304)
                     } else {
                         let consulta = mysql.format(`INSERT INTO userdata (nombres, apellidos, documento, identificacion, password, permisos, estado) VALUES (?, ?, ?, ?, ?, ?, ?)`, [FirstName, SecondName, Type, Identification, Password, 3, 1])
                         connection.query(consulta, (err, results) => {
@@ -84,6 +89,7 @@ router.post('/create', async (req, res) => {
                                     MESSAGE: "Usuario Generado Exitosamente"
                                 }
                             );
+                            res.status(200)
                         });
                     }
                 }
