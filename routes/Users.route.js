@@ -32,14 +32,15 @@ router.post('/log', async (req, res) => {
             let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [Identification])
             connection.query(consulta, (err, results) => {
                 console.log(results[0]);
-                const { id, nombres, documento, identificacion, password, permisos } = results[0];
+                const { id, imagen, nombres, documento, identificacion, password, permisos } = results[0];
                 if (documento === parseInt(Type) && identificacion === parseInt(Identification) && password === Password) {
                     res.json(
                         {
                             CODE: 200,
                             _name: nombres,
                             _key: identificacion,
-                            _permissions: permisos
+                            _permissions: permisos,
+                            _profileimage: imagen
                         }
                     )
                     res.status(200)
