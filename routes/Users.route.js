@@ -63,7 +63,7 @@ router.post('/log', async (req, res) => {
 
 router.post('/create', async (req, res) => {
     try {
-        const { FirstName, SecondName, Identification, Type, Password } = req.body;
+        const { FirstName, SecondName, Identification, Type, Password, Image } = req.body;
         if (FirstName === '' || SecondName === '' || Identification === '' || Type === '' || Password === '') {
             res.send({
                 CODE: 400,
@@ -74,7 +74,8 @@ router.post('/create', async (req, res) => {
             let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [Identification])
             connection.query(consulta, (err, results) => {
                 if (results.length === 0) {
-                    let consulta = mysql.format(`INSERT INTO userdata (nombres, apellidos, documento, identificacion, password, permisos, estado) VALUES (?, ?, ?, ?, ?, ?, ?)`, [FirstName, SecondName, Type, Identification, Password, 3, 1])
+                    if (Image == '') {
+                        let consulta = mysql.format(`INSERT INTO userdata ( imagen, nombres, apellidos, documento, identificacion, password, permisos, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [null, FirstName, SecondName, Type, Identification, Password, 3, 1])
                     connection.query(consulta, (err, results) => {
                         err ? console.log(err) : res.json(
                             {
@@ -84,6 +85,17 @@ router.post('/create', async (req, res) => {
                         );
                         res.status(201)
                     });
+                    } else {
+                        let consulta = mysql.format(`INSERT INTO userdata ( imagen, nombres, apellidos, documento, identificacion, password, permisos, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [Image, FirstName, SecondName, Type, Identification, Password, 3, 1])
+                    connection.query(consulta, (err, results) => {
+                        err ? console.log(err) : res.json(
+                            {
+                                CODE: 201,
+                                MESSAGE: "Usuario Generado Exitosamente"
+                            }
+                        );
+                        res.status(201)
+                    }
                 } else {
                     const { documento, identificacion } = results[0];
                     if (identificacion === parseInt(Identification) && documento === parseInt(Type)) {
