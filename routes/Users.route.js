@@ -5,7 +5,18 @@ const router = express.Router();
 //DataBase
 const { connection } = require('../DataBase/Conection.db')
 
-router.get('/create', (req, res) => res.send('user create ENDPOINT'))
+router.post('/data', (req, res) => {
+    const { _key } = req.body;
+    let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [_key]);
+    connection.query(consulta, (err, results) => {
+        err ? console.log(err) : res.json({
+            _id: results[0].identificacion,
+            _name: results[0].nombres,
+            _lastName: results[0].apellidos,
+            _type: results[0].documento === 1 ? 'Cedula de Ciudadania' : results[0].documento === 2 ? 'Tarjeta de Identidad' : 'Cedula de Extranjeria'
+        })
+    })
+})
 
 router.post('/log', async (req, res) => {
     try {
