@@ -10,7 +10,11 @@ router.post('/search', (req, res) => {
         const { Query } = req.body;
         console.log(Query);
         if (Query === '') {
-            console.log('Busqueda vacia');
+            connection.query(`SELECT * FROM courses`, (err, results) => {
+                res.json(
+                    results
+                )
+            })
         } else {
             let consulta = mysql.format(`SELECT * FROM courses WHERE nombre LIKE ?`, [`%${Query}%`])
             connection.query(consulta, (err, results) => {
@@ -25,11 +29,16 @@ router.post('/search', (req, res) => {
 })
 
 router.get('/getter', (req, res) => {
-    let consulta = mysql.format(`SELECT * FROM courses`);
+    connection.query(`SELECT * FROM courses`, (err, results) => {
+        res.json( results )
+    })
+})
+
+router.post('/select', (req, res) => {
+    const { _token } = req.body;
+    let consulta = mysql.format(`SELECT * FROM courses WHERE id = ?`, [_token]);
     connection.query(consulta, (err, results) => {
-        res.json(
-            results
-        )
+        err ? console.log(err) : res.json( results )
     })
 })
 
