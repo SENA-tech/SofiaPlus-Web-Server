@@ -13,7 +13,8 @@ router.post('/data', (req, res) => {
             _id: results[0].identificacion,
             _name: results[0].nombres,
             _lastName: results[0].apellidos,
-            _type: results[0].documento === 1 ? 'Cedula de Ciudadania' : results[0].documento === 2 ? 'Tarjeta de Identidad' : 'Cedula de Extranjeria'
+            _type: results[0].documento === 1 ? 'Cedula de Ciudadania' : results[0].documento === 2 ? 'Tarjeta de Identidad' : 'Cedula de Extranjeria',
+            _profileimage: results[0].imagen
         })
     })
 })
