@@ -76,25 +76,26 @@ router.post('/create', async (req, res) => {
                 if (results.length === 0) {
                     if (Image == '') {
                         let consulta = mysql.format(`INSERT INTO userdata ( imagen, nombres, apellidos, documento, identificacion, password, permisos, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [null, FirstName, SecondName, Type, Identification, Password, 3, 1])
-                    connection.query(consulta, (err, results) => {
-                        err ? console.log(err) : res.json(
-                            {
-                                CODE: 201,
-                                MESSAGE: "Usuario Generado Exitosamente"
-                            }
-                        );
-                        res.status(201)
-                    });
+                        connection.query(consulta, (err, results) => {
+                            err ? console.log(err) : res.json(
+                                {
+                                    CODE: 201,
+                                    MESSAGE: "Usuario Generado Exitosamente"
+                                }
+                            );
+                            res.status(201)
+                        });
                     } else {
                         let consulta = mysql.format(`INSERT INTO userdata ( imagen, nombres, apellidos, documento, identificacion, password, permisos, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [Image, FirstName, SecondName, Type, Identification, Password, 3, 1])
-                    connection.query(consulta, (err, results) => {
-                        err ? console.log(err) : res.json(
-                            {
-                                CODE: 201,
-                                MESSAGE: "Usuario Generado Exitosamente"
-                            }
-                        );
-                        res.status(201)
+                        connection.query(consulta, (err, results) => {
+                            err ? console.log(err) : res.json(
+                                {
+                                    CODE: 201,
+                                    MESSAGE: "Usuario Generado Exitosamente"
+                                }
+                            );
+                            res.status(201)
+                        })
                     }
                 } else {
                     const { documento, identificacion } = results[0];
