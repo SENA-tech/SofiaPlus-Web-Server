@@ -147,4 +147,30 @@ router.post('/create', async (req, res) => {
     }
 });
 
+router.post('/edit', async (req, res) => {
+    try {
+        const { Imagen, Password, token } = req.body;
+        if (Password === '' || Imagen === '') {
+            res.send({
+                CODE: 400,
+                MESSAGE: "Campos Incompletos"
+            });
+            res.status(400)
+        } else {
+            let consulta = mysql.format(`UPDATE userdata SET password = ?, imagen = ? WHERE id = ?`, [ Password, Imagen, token])
+            connection.query(consulta, (err, results) => {
+                err ? console.log(err) : res.json(
+                    {
+                        CODE: 200,
+                        MESSAGE: "Usuario Generado Exitosamente"
+                    }
+                );
+                res.status(200)
+            })
+        }
+    } catch (e) {
+        console.log(e);
+    }
+});
+
 module.exports = router
