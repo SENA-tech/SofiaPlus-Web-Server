@@ -21,6 +21,7 @@ router.post('/data', (req, res) => {
                 })
             } else {
                 res.json({
+                    _key: results[0].id,
                     _id: results[0].identificacion,
                     _name: results[0].nombres,
                     _lastName: results[0].apellidos,
