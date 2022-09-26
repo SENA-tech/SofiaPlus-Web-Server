@@ -28,6 +28,16 @@ router.post('/search', (req, res) => {
     }
 })
 
+router.post('/delete', (req, res) => {
+    const { courseId } = req.body;
+    let consulta = mysql.format(`DELETE FROM courses WHERE id = ?`, [courseId])
+    connection.query(consulta, (err, results) => {
+        err ? console.log(err) : res.json(
+            results
+        )
+    })
+})
+
 router.get('/getter', (req, res) => {
     connection.query(`SELECT * FROM courses`, (err, results) => {
         res.json( results )
