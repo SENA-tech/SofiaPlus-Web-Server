@@ -147,15 +147,15 @@ router.post('/getter', (req, res) => {
     const { key_user } = req.body;
     let consulta = mysql.format(`SELECT curso FROM inscriptions WHERE usuario = ?`, [key_user])
     connection.query(consulta, (err, results) => {
+        let cursos_obtenidos = [];
         for (let i = 0; i < results.length; i++) {
-            let cursos_obtenidos = [];
             const element = results[i];
-            let consulta = mysql.format(`SELECT * FROM courses WHERE id = ?`,[element.curso])
+            let consulta = mysql.format(`SELECT * FROM courses WHERE id = ?`, [element.curso])
             connection.query(consulta, (err, results) => {
                 cursos_obtenidos = [...cursos_obtenidos, results[0]]
-                console.log(cursos_obtenidos);
             })
         }
+        setTimeout(() => res.json(cursos_obtenidos), 3000)
     })
 })
 
