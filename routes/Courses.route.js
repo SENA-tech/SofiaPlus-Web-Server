@@ -143,4 +143,13 @@ router.post('/edit', (req, res) => {
     }
 });
 
+router.post('/getter', (req, res) => {
+    const { key_user } = req.body;
+    let consulta = mysql.format(`SELECT curso FROM inscriptions WHERE usuario = ?`, [key_user])
+    connection.query(consulta, (err, results) => {
+        console.log(results);
+        //let consulta = mysql.format(`SELECT * FROM courses `)
+    })
+})
+
 module.exports = router
