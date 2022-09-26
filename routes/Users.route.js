@@ -14,6 +14,7 @@ router.post('/data', (req, res) => {
         } else {
             if (results.length === 0) {
                 res.json({
+                    _key: 0,
                     _id: 'indefinidio',
                     _name: 'Usuario',
                     _lastName: 'No Encontrado',
