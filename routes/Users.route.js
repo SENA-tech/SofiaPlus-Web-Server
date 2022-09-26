@@ -17,7 +17,7 @@ router.post('/data', (req, res) => {
                     _id: 'indefinidio',
                     _name: 'Usuario',
                     _lastName: 'No Encontrado',
-                    _type: 'Indefinidio',
+                    _type: 'Indefinido',
                 })
             } else {
                 res.json({
