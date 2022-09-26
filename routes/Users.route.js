@@ -49,11 +49,12 @@ router.post('/log', async (req, res) => {
                     console.log(err)
                 } else {
                     console.log(results[0]);
-                    const { imagen, nombres, documento, identificacion, password, permisos } = results[0];
+                    const { id, imagen, nombres, documento, identificacion, password, permisos } = results[0];
                     if (documento === parseInt(Type) && identificacion === parseInt(Identification) && password === Password) {
                         res.json(
                             {
                                 CODE: 200,
+                                _token: id,
                                 _name: nombres,
                                 _key: identificacion,
                                 _permissions: permisos,
