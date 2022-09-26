@@ -9,13 +9,26 @@ router.post('/data', (req, res) => {
     const { _key } = req.body;
     let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [_key]);
     connection.query(consulta, (err, results) => {
-        err ? console.log(err) : res.json({
-            _id: results[0].identificacion,
-            _name: results[0].nombres,
-            _lastName: results[0].apellidos,
-            _type: results[0].documento === 1 ? 'Cedula de Ciudadania' : results[0].documento === 2 ? 'Tarjeta de Identidad' : 'Cedula de Extranjeria',
-            _profileimage: results[0].imagen
-        })
+        if (err) {
+            console.log(err)
+        } else {
+            if (results.length === 0) {
+                res.json({
+                    _id: 'indefinidio',
+                    _name: 'Usuario',
+                    _lastName: 'No Encontrado',
+                    _type: 'Indefinidio',
+                })
+            } else {
+                res.json({
+                    _id: results[0].identificacion,
+                    _name: results[0].nombres,
+                    _lastName: results[0].apellidos,
+                    _type: results[0].documento === 1 ? 'Cedula de Ciudadania' : results[0].documento === 2 ? 'Tarjeta de Identidad' : 'Cedula de Extranjeria',
+                    _profileimage: results[0].imagen
+                })
+            }
+        }
     })
 })
 
