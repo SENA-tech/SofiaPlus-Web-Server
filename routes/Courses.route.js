@@ -40,7 +40,7 @@ router.post('/delete', (req, res) => {
 
 router.get('/getter', (req, res) => {
     connection.query(`SELECT * FROM courses`, (err, results) => {
-        res.json( results )
+        res.json(results)
     })
 })
 
@@ -48,7 +48,7 @@ router.post('/select', (req, res) => {
     const { _token } = req.body;
     let consulta = mysql.format(`SELECT * FROM courses WHERE id = ?`, [_token]);
     connection.query(consulta, (err, results) => {
-        err ? console.log(err) : res.json( results )
+        err ? console.log(err) : res.json(results)
     })
 })
 
@@ -84,6 +84,47 @@ router.post('/create', async (req, res) => {
 
         }
     } catch (e) {
+        console.log(e);
+    }
+});
+
+router.post('/edit', (req, res) => {
+    try {
+        console.log('edit route complete');
+        /* const { _permission, _code, id, name, teacher, type, image, description, requirements, skills, start, end, duration } = req.body;
+        console.log(name, teacher, type, image, description, requirements, skills, start, end, duration);
+        if (name === '' || teacher === '' || type === '' || description === '' || requirements === '' || skills === '' || start === '' || end == '' || duration === '') {
+            res.send({
+                CODE: 400,
+                MESSAGE: "Campos Incompletos"
+            });
+            res.status(400)
+        } else {
+            let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [_code])
+            connection.query(consulta, (err, results) => {
+                if (results[0].identificacion === _code && results[0].permisos === _permission) {
+                    let consulta = mysql.format(`SELECT * FROM courses WHERE id = ?`, [id])
+                    connection.query(consulta, (err, results) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            let consulta = mysql.format(`UPDATE courses SET nombre = ?, instructor = ?, tipo = ?, image = ?, descripcion = ?, requisitos = ?, habilidades = ?, inicio = ?, fin = ?, duracion = ? WHERE id = ?`, [name, teacher, type, image, description, requirements, skills, start, end, duration, id])
+                            connection.query(consulta, (err, results) => {
+                                err ? console.log(err) : res.json({
+                                    CODE: 200,
+                                    MESSAGE: "Curso Creado Exitosamente"
+                                });
+                            })
+                        }
+                    })
+                }
+            })
+        } */
+    } catch (e) {
+        res.json({
+            CODE: 400,
+            MESSAGE: "Solicitud no aprobada"
+        });
         console.log(e);
     }
 });
