@@ -56,7 +56,7 @@ router.post('/select', (req, res) => {
                 if (err && results.length === 0) {
                     console.log('hubo un error');
                 } else {
-                    let consulta = mysql.format(`INSERT INTO inscriptions (usuario, curso, estado) VALUES (?, ?, ?)`, [_key,parseInt(_token),1])
+                    let consulta = mysql.format(`INSERT INTO inscriptions (usuario, curso, estado) VALUES (?, ?, ?)`, [_key, parseInt(_token), 1])
                     connection.query(consulta, (err, results) => {
                         err ? console.log(err) : res.json(results)
                     })
@@ -147,8 +147,15 @@ router.post('/getter', (req, res) => {
     const { key_user } = req.body;
     let consulta = mysql.format(`SELECT curso FROM inscriptions WHERE usuario = ?`, [key_user])
     connection.query(consulta, (err, results) => {
+        let cursos_obtenidos = [];
         console.log(results);
-        //let consulta = mysql.format(`SELECT * FROM courses `)
+        results.map(e => {
+            let consulta = mysql.format(`SELECT * FROM courses WHERE id = ?`, [e.curso])
+            connection.query(consulta, (err, results) => {
+                cursos_obtenidos.push(results)
+            })
+        })
+        res.json( cursos_obtenidos );
     })
 })
 
