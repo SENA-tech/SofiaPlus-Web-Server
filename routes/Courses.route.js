@@ -45,10 +45,24 @@ router.get('/getter', (req, res) => {
 })
 
 router.post('/select', (req, res) => {
-    const { _token } = req.body;
+    const { _token, _key } = req.body;
     let consulta = mysql.format(`SELECT * FROM courses WHERE id = ?`, [_token]);
     connection.query(consulta, (err, results) => {
-        err ? console.log(err) : res.json(results)
+        if (err && results.length === 0) {
+            console.log(err);
+        } else {
+            let consulta = mysql.format(`SELECT * FROM userdata WHERE id = ?`, [_key]);
+            connection.query(consulta, (err, results) => {
+                if (err && results.length === 0) {
+                    console.log('hubo un error');
+                } else {
+                    let consulta = mysql.format(`INSERT INTO inscriptions (usuario, curso, estado) VALUES (?, ?, ?)`, [_key,_token,1])
+                    connection.query(consulta, (err, results) => {
+                        err ? console.log(err) : res.json(results)
+                    })
+                }
+            })
+        }
     })
 })
 
@@ -91,7 +105,7 @@ router.post('/create', async (req, res) => {
 router.post('/edit', (req, res) => {
     try {
         console.log('edit route complete');
-        /* const { _permission, _code, id, name, teacher, type, image, description, requirements, skills, start, end, duration } = req.body;
+        const { _permission, _code, id, name, teacher, type, image, description, requirements, skills, start, end, duration } = req.body;
         console.log(name, teacher, type, image, description, requirements, skills, start, end, duration);
         if (name === '' || teacher === '' || type === '' || description === '' || requirements === '' || skills === '' || start === '' || end == '' || duration === '') {
             res.send({
@@ -112,14 +126,14 @@ router.post('/edit', (req, res) => {
                             connection.query(consulta, (err, results) => {
                                 err ? console.log(err) : res.json({
                                     CODE: 200,
-                                    MESSAGE: "Curso Creado Exitosamente"
+                                    MESSAGE: "Curso Editado Exitosamente"
                                 });
                             })
                         }
                     })
                 }
             })
-        } */
+        }
     } catch (e) {
         res.json({
             CODE: 400,
