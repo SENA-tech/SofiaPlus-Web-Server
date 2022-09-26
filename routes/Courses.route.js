@@ -152,10 +152,10 @@ router.post('/getter', (req, res) => {
             const element = results[i];
             let consulta = mysql.format(`SELECT * FROM courses WHERE id = ?`,[element.curso])
             connection.query(consulta, (err, results) => {
-                console.log(results);
+                cursos_obtenidos.push(results[0])
             })
         }
-        //res.json( cursos_obtenidos );
+        console.log(cursos_obtenidos);
     })
 })
 
