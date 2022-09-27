@@ -73,7 +73,9 @@ router.post('/filter', (req, res) => {
         if (err && results.length === 0) {
             console.log(err);
         } else {
-            console.log(results);
+            res.json(
+                results
+            )
         }
     })
 })
