@@ -5,6 +5,14 @@ const router = express.Router();
 //DataBase
 const { connection } = require('../DataBase/Conection.db')
 
+router.post('/verify', (req, res) => {
+    const { _token } = req.body;
+    let consulta = mysql.format(`SELECT * FROM userdata WHERE id = ?`, [_token]);
+    connection.query(consulta, (err, results) => {
+        err ? console.log(err) : res.json(results)
+    })
+})
+
 router.post('/data', (req, res) => {
     const { _key } = req.body;
     let consulta = mysql.format(`SELECT * FROM userdata WHERE identificacion = ?`, [_key]);
@@ -12,7 +20,7 @@ router.post('/data', (req, res) => {
         if (err) {
             console.log(err)
         } else {
-            if (results.length === 0) {
+            results.length === 0 ? //if
                 res.json({
                     _key: 0,
                     _id: 'indefinidio',
@@ -20,7 +28,7 @@ router.post('/data', (req, res) => {
                     _lastName: 'No Encontrado',
                     _type: 'Indefinido',
                 })
-            } else {
+                : //else
                 res.json({
                     _key: results[0].id,
                     _id: results[0].identificacion,
@@ -29,7 +37,6 @@ router.post('/data', (req, res) => {
                     _type: results[0].documento === 1 ? 'Cedula de Ciudadania' : results[0].documento === 2 ? 'Tarjeta de Identidad' : 'Cedula de Extranjeria',
                     _profileimage: results[0].imagen
                 })
-            }
         }
     })
 })
@@ -157,7 +164,7 @@ router.post('/edit', async (req, res) => {
             });
             res.status(400)
         } else {
-            let consulta = mysql.format(`UPDATE userdata SET password = ?, imagen = ? WHERE id = ?`, [ Password, Imagen, token])
+            let consulta = mysql.format(`UPDATE userdata SET password = ?, imagen = ? WHERE id = ?`, [Password, Imagen, token])
             connection.query(consulta, (err, results) => {
                 err ? console.log(err) : res.json(
                     {
