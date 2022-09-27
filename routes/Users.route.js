@@ -8,9 +8,19 @@ const { connection } = require('../DataBase/Conection.db')
 router.post('/verify', (req, res) => {
     const { _token } = req.body;
     let consulta = mysql.format(`SELECT * FROM userdata WHERE id = ?`, [_token]);
-    connection.query(consulta, (err, results) => {
-        err ? console.log(err) : res.json(results)
-    })
+    setTimeout(() => {
+        connection.query(consulta, (err, results) => {
+            const { id, imagen, nombres, identificacion, permisos } = results[0];
+            err ? console.log(err) : res.json({
+                CODE: 200,
+                _token: id,
+                _name: nombres,
+                _key: identificacion,
+                _permissions: permisos,
+                _profileimage: imagen
+            })
+        })
+    }, 1500)
 })
 
 router.post('/data', (req, res) => {
