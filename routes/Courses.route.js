@@ -66,6 +66,18 @@ router.post('/select', (req, res) => {
     })
 })
 
+router.post('/filter', (req, res) => {
+    const { Query } = req.body;
+    let consulta = mysql.format(`SELECT * FROM courses WHERE tipo = ?`, [Query]);
+    connection.query(consulta, (err, results) => {
+        if (err && results.length === 0) {
+            console.log(err);
+        } else {
+            console.log(results);
+        }
+    })
+})
+
 router.post('/create', async (req, res) => {
     try {
         const { _permission, _code, name, teacher, type, image, description, requirements, skills, start, end, duration } = req.body;
