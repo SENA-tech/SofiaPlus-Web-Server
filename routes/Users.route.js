@@ -176,13 +176,24 @@ router.post('/edit', async (req, res) => {
         } else {
             let consulta = mysql.format(`UPDATE userdata SET password = ?, imagen = ? WHERE id = ?`, [Password, Imagen, token])
             connection.query(consulta, (err, results) => {
-                err ? console.log(err) : res.json(
-                    {
-                        CODE: 200,
-                        MESSAGE: "Usuario Generado Exitosamente"
-                    }
-                );
-                res.status(200)
+                const { password } = results[0];
+                if (Password === password) {
+                    err ? console.log(err) : res.json(
+                        {
+                            CODE: 200,
+                            MESSAGE: "Usuario Actualizado Exitosamente"
+                        }
+                    );
+                    res.status(200)
+                } else {
+                    err ? console.log(err) : res.json(
+                        {
+                            CODE: 400,
+                            MESSAGE: "Datos Incorrectos"
+                        }
+                    );
+                    res.status(400)
+                }
             })
         }
     } catch (e) {
