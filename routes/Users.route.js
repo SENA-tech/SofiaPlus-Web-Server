@@ -68,7 +68,15 @@ router.post('/log', async (req, res) => {
                     console.log(err)
                 } else {
                     console.log(results[0]);
-                    const { id, imagen, nombres, documento, identificacion, password, permisos } = results[0];
+                    if (results.length === 0) {
+                        res.json(
+                            {
+                                CODE: 400,
+                                MESSAGE: "Logueo Erroneo, intentelo nuevamente"
+                            }
+                        )
+                    } else {
+                        const { id, imagen, nombres, documento, identificacion, password, permisos } = results[0];
                     if (documento === parseInt(Type) && identificacion === parseInt(Identification) && password === Password) {
                         res.json(
                             {
@@ -90,6 +98,7 @@ router.post('/log', async (req, res) => {
                             }
                         )
                         res.status(400)
+                    }
                     }
                 }
             })
