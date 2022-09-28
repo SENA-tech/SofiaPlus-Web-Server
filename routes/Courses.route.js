@@ -58,7 +58,10 @@ router.post('/select', (req, res) => {
                 } else {
                     let consulta = mysql.format(`INSERT INTO inscriptions (usuario, curso, estado) VALUES (?, ?, ?)`, [_key, parseInt(_token), 1])
                     connection.query(consulta, (err, results) => {
-                        err ? console.log(err) : res.json(results)
+                        err ? console.log(err) : res.json({
+                            results,
+                            MESSAGE: 'Inscripcion realizada'
+                        })
                     })
                 }
             })
