@@ -73,7 +73,7 @@ router.post('/log', async (req, res) => {
                         res.json(
                             {
                                 CODE: 200,
-                                MESSAGE: "Bienvenido de Vuelta desde servidor",
+                                MESSAGE: "Sesion Iniciada",
                                 _token: id,
                                 _name: nombres,
                                 _key: identificacion,
